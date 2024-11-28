@@ -8,7 +8,7 @@ fn main() {
         std::process::exit(1);
     }
 
-    let sink = get_running_sink().unwrap_or("@DEFAUYLT_SINK@".to_string());
+    let sink = get_running_sink().unwrap_or("@DEFAULT_SINK@".to_string());
 
     let mut cmd = Command::new("pactl");
 
@@ -72,7 +72,7 @@ fn get_volume(sink: &String) -> Option<String> {
 
     return match lines.next() {
         Some(str) => {
-            let v = str.split(' ').nth(4).unwrap();
+            let v = str.split(' ').filter(|s| s.len()>0).nth(4).unwrap();
             Some(String::from(v))
         },
         None => None
@@ -89,9 +89,6 @@ fn is_mute(sink: &String) -> bool {
     }
 
     let output_string = String::from_utf8(output.stdout).unwrap();
-
-    println!("get mute: {}", output_string.trim_end());
-    println!("get mute: {}", output_string.trim_end());
 
     return output_string.trim_end().ends_with("yes")
 }
