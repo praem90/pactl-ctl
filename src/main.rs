@@ -8,13 +8,7 @@ fn main() {
         std::process::exit(1);
     }
 
-    let sink = match get_running_sink() {
-        Some(sink) => sink,
-        None => {
-            println!("No sink found");
-            std::process::exit(1);
-        }
-    };
+    let sink = get_running_sink().unwrap_or("@DEFAUYLT_SINK@".to_string());
 
     let mut cmd = Command::new("pactl");
 
@@ -59,7 +53,7 @@ fn get_running_sink() -> Option<String> {
             let l = str.split('\t').nth(1).unwrap();
             Some(String::from(l))
         },
-        _ => Some("@DEFAULT_SINK@".to_string())
+        _ => None
     }
 }
 
